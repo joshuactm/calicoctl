@@ -29,12 +29,13 @@ func init() {
 		false,
 		[]string{"bgpconfiguration", "bgpconfigurations", "bgpconfig", "bgpconfigs"},
 		[]string{"NAME", "LOGSEVERITY", "MESHENABLED", "ASNUMBER"},
-		[]string{"NAME", "LOGSEVERITY", "MESHENABLED", "ASNUMBER"},
+		[]string{"NAME", "LOGSEVERITY", "MESHENABLED", "ASNUMBER", "PASSWORD"},
 		map[string]string{
 			"NAME":        "{{.ObjectMeta.Name}}",
 			"LOGSEVERITY": "{{.Spec.LogSeverityScreen}}",
 			"MESHENABLED": "{{if .Spec.NodeToNodeMeshEnabled}}{{.Spec.NodeToNodeMeshEnabled}}{{ else }}-{{ end }}",
 			"ASNUMBER":    "{{if .Spec.ASNumber}}{{.Spec.ASNumber}}{{ else }}-{{ end }}",
+			"PASSWORD":    "{{if .Spec.Password}}{{.Spec.Password}}{{ else }}-{{ end }}",
 		},
 		func(ctx context.Context, client client.Interface, resource ResourceObject) (ResourceObject, error) {
 			r := resource.(*api.BGPConfiguration)

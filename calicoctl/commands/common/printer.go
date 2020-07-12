@@ -241,25 +241,40 @@ func joinAndTruncate(items interface{}, separator string, maxLen int) string {
 // config returns a function that returns the current global named config
 // value.
 func config(client client.Interface) func(string) string {
-	var asValue string
+	var configValue string
 	return func(name string) string {
 		switch strings.ToLower(name) {
 		case "asnumber":
-			if asValue == "" {
+			if configValue == "" {
 				if bgpConfig, err := client.BGPConfigurations().Get(context.Background(), "default", options.GetOptions{}); err != nil {
 					// Check if it was an actual error accessing the data
 					if _, ok := err.(calicoErrors.ErrorResourceDoesNotExist); !ok {
-						asValue = "unknown"
+						configValue = "unknown"
 					} else {
 						// Use the default ASNumber of 64512 when there is none configured (first ASN reserved for private use).
 						// https://en.m.wikipedia.org/wiki/Autonomous_system_(Internet)#ASN_Table
-						asValue = "64512"
+						configValue = "64512"
 					}
 				} else {
-					asValue = bgpConfig.Spec.ASNumber.String()
+					configValue = bgpConfig.Spec.ASNumber.String()
 				}
 			}
-			return asValue
+			return configValue
+		case "password":
+			if configValue == "" {
+				if bgpConfig, err := client.BGPConfigurations().Get(context.Background(), "default", options.GetOptions{}); err != nil {
+					// Check if it was an actual error accessing the data
+					if _, ok := err.(calicoErrors.ErrorResourceDoesNotExist); !ok {
+						configValue = "unknown"
+					} else {
+						// Use empty string if not provided
+						configValue = ""
+					}
+				} else {
+					configValue = bgpConfig.Spec.Password
+				}
+			}
+			return configValue
 		}
 		panic("unhandled config type")
 	}

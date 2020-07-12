@@ -29,12 +29,13 @@ func init() {
 		false,
 		[]string{"node", "nodes", "no", "nos"},
 		[]string{"NAME"},
-		[]string{"NAME", "ASN", "IPV4", "IPV6"},
+		[]string{"NAME", "ASN", "IPV4", "IPV6","PASSWORD"},
 		map[string]string{
-			"NAME": "{{.ObjectMeta.Name}}",
-			"ASN":  "{{if .Spec.BGP}}{{if .Spec.BGP.ASNumber}}{{.Spec.BGP.ASNumber}}{{else}}({{config \"asnumber\"}}){{end}}{{end}}",
-			"IPV4": "{{if .Spec.BGP}}{{if .Spec.BGP.IPv4Address}}{{.Spec.BGP.IPv4Address}}{{end}}{{end}}",
-			"IPV6": "{{if .Spec.BGP}}{{if .Spec.BGP.IPv6Address}}{{.Spec.BGP.IPv6Address}}{{end}}{{end}}",
+			"NAME":     "{{.ObjectMeta.Name}}",
+			"ASN":      "{{if .Spec.BGP}}{{if .Spec.BGP.ASNumber}}{{.Spec.BGP.ASNumber}}{{else}}({{config \"asnumber\"}}){{end}}{{end}}",
+			"IPV4":     "{{if .Spec.BGP}}{{if .Spec.BGP.IPv4Address}}{{.Spec.BGP.IPv4Address}}{{end}}{{end}}",
+			"IPV6":     "{{if .Spec.BGP}}{{if .Spec.BGP.IPv6Address}}{{.Spec.BGP.IPv6Address}}{{end}}{{end}}",
+			"PASSWORD": "{{if .Spec.BGP}}{{if .Spec.BGP.Password}}{{.Spec.BGP.Password}}{{else}}({{config \"password\"}}){{end}}{{end}}",
 		},
 		func(ctx context.Context, client client.Interface, resource ResourceObject) (ResourceObject, error) {
 			r := resource.(*api.Node)

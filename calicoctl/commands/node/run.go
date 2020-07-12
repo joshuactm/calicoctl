@@ -56,7 +56,7 @@ var (
 func Run(args []string) error {
 	var err error
 	doc := `Usage:
-  calicoctl node run [--ip=<IP>] [--ip6=<IP6>] [--as=<AS_NUM>]
+  calicoctl node run [--ip=<IP>] [--ip6=<IP6>] [--as=<AS_NUM>] [--bgppassword=<PASSWORD>]
                      [--name=<NAME>]
                      [--ip-autodetection-method=<IP_AUTODETECTION_METHOD>]
                      [--ip6-autodetection-method=<IP6_AUTODETECTION_METHOD>]
@@ -78,6 +78,12 @@ Options:
                            If there is no configured value and --as option is
                            omitted, the node will inherit the global AS number
                            (see 'calicoctl config' for details).
+     --bpgpassword=<PASSWORD>
+                           Set the BGP password for this node.  If omitted, it
+                           will use the value configured on the node resource.
+                           If there is no configured value and --bgppassword
+                           option is omitted, the node will inherit the global
+                           BGP password if set.
      --ip=<IP>             Set the local IPv4 routing address for this node.
                            If omitted, it will use the value configured on the
                            node resource.  If there is no configured value
@@ -167,6 +173,7 @@ Description:
 	ipv6ADMethod := argutils.ArgStringOrBlank(arguments, "--ip6-autodetection-method")
 	logDir := argutils.ArgStringOrBlank(arguments, "--log-dir")
 	asNumber := argutils.ArgStringOrBlank(arguments, "--as")
+	password := argutils.ArgStringOrBlank(arguments, "--bgppassword")
 	img := argutils.ArgStringOrBlank(arguments, "--node-image")
 	backend := argutils.ArgStringOrBlank(arguments, "--backend")
 	dryrun := argutils.ArgBoolOrFalse(arguments, "--dryrun")
@@ -251,6 +258,9 @@ Description:
 	}
 	if ipv6 != "" {
 		envs["IP6"] = ipv6
+	}
+	if password != "" {
+		envs["BGPPASSWORD"] = password
 	}
 
 	// Create a struct for volumes to mount.

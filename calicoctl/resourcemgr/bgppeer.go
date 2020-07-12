@@ -29,12 +29,13 @@ func init() {
 		false,
 		[]string{"bgppeer", "bgppeers", "bgpp", "bgpps", "bp", "bps"},
 		[]string{"NAME", "PEERIP", "NODE", "ASN"},
-		[]string{"NAME", "PEERIP", "NODE", "ASN"},
+		[]string{"NAME", "PEERIP", "NODE", "ASN", "PASSWORD"},
 		map[string]string{
-			"NAME":   "{{.ObjectMeta.Name}}",
-			"PEERIP": "{{.Spec.PeerIP}}",
-			"NODE":   "{{ if eq .Spec.Node `` }}{{ if eq .Spec.NodeSelector `` }}(global){{ else }}{{.Spec.NodeSelector}}{{ end }}{{ else }}{{.Spec.Node}}{{ end }}",
-			"ASN":    "{{.Spec.ASNumber}}",
+			"NAME":     "{{.ObjectMeta.Name}}",
+			"PEERIP":   "{{.Spec.PeerIP}}",
+			"NODE":     "{{ if eq .Spec.Node `` }}{{ if eq .Spec.NodeSelector `` }}(global){{ else }}{{.Spec.NodeSelector}}{{ end }}{{ else }}{{.Spec.Node}}{{ end }}",
+			"ASN":      "{{.Spec.ASNumber}}",
+			"PASSWORD": "{{.Spec.Password}}",
 		},
 		func(ctx context.Context, client client.Interface, resource ResourceObject) (ResourceObject, error) {
 			r := resource.(*api.BGPPeer)
